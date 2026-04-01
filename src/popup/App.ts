@@ -9,6 +9,7 @@ import { renderTabBar } from './components/TabBar';
 import { renderSearchBar } from './components/SearchBar';
 import { renderClipList } from './components/ClipList';
 import { renderSnippetEditor } from './components/SnippetEditor';
+import { renderHelpOverlay } from './components/HelpOverlay';
 import { showToast } from './components/Toast';
 
 export function initApp(root: HTMLElement): void {
@@ -16,9 +17,10 @@ export function initApp(root: HTMLElement): void {
   let allClips: ClipEntry[] = [];
 
   // Layout
-  root.className = 'w-[380px] max-h-[500px] flex flex-col bg-white dark:bg-gray-900';
+  root.className = 'relative w-[380px] max-h-[500px] flex flex-col bg-white dark:bg-gray-900';
 
-  renderTabBar(root, store);
+  const showHelp = renderHelpOverlay(root);
+  renderTabBar(root, store, showHelp);
   renderSearchBar(root, store);
   const snippetEditorEl = renderSnippetEditor(root, store, () => fetchClips());
   renderClipList(root, store, {

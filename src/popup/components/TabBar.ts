@@ -8,9 +8,13 @@ const LABELS: Record<string, string> = {
   snippets: 'Snippets',
 };
 
-export function renderTabBar(container: HTMLElement, store: Store<PopupState>): void {
+export function renderTabBar(
+  container: HTMLElement,
+  store: Store<PopupState>,
+  onHelp: () => void,
+): void {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex border-b border-gray-200 dark:border-gray-700 px-2 pt-2';
+  wrapper.className = 'flex items-center border-b border-gray-200 dark:border-gray-700 px-2 pt-2';
 
   const buttons: HTMLButtonElement[] = [];
 
@@ -32,6 +36,17 @@ export function renderTabBar(container: HTMLElement, store: Store<PopupState>): 
       btn.className = getTabClass(isActive);
     });
   });
+
+  const helpBtn = document.createElement('button');
+  helpBtn.textContent = '?';
+  helpBtn.title = 'Help';
+  helpBtn.className =
+    'ml-auto mb-1 w-5 h-5 rounded-full text-[11px] font-bold leading-none ' +
+    'text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 ' +
+    'border border-gray-300 dark:border-gray-600 hover:border-gray-400 ' +
+    'flex items-center justify-center flex-shrink-0';
+  helpBtn.addEventListener('click', onHelp);
+  wrapper.appendChild(helpBtn);
 
   container.appendChild(wrapper);
 }
