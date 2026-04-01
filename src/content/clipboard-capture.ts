@@ -36,6 +36,15 @@ function getRichContent(): string | undefined {
   return undefined;
 }
 
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message.type === MessageType.WRITE_CLIPBOARD) {
+    navigator.clipboard.writeText(message.payload.text)
+      .then(() => sendResponse({ success: true }))
+      .catch(() => sendResponse({ success: false }));
+    return true;
+  }
+});
+
 document.addEventListener('copy', () => {
   if (isPasswordField()) return;
 
