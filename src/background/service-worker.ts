@@ -90,6 +90,7 @@ async function handleSaveSnippet(payload: SaveSnippetPayload): Promise<ClipEntry
   chrome.tabs.query({}).then((tabs) => {
     for (const tab of tabs) {
       if (tab.id != null) {
+        // Tabs without an injected content script will reject this message; that is expected.
         chrome.tabs.sendMessage(tab.id, { type: MessageType.SNIPPETS_UPDATED }).catch(() => {});
       }
     }
@@ -158,7 +159,10 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     }
   };
 
-  handle().then(sendResponse).catch((err) => sendResponse({ error: String(err) }));
+  handle().then(sendResponse).catch((err) => {
+    console.error('[clipjar] message handler error:', err);
+    sendResponse({ error: err instanceof Error ? err.message : String(err) });
+  });
   return true; // async response
 });
 
@@ -186,6 +190,20 @@ async function dispatchClipboardWrite(tab: chrome.tabs.Tab | undefined, message:
   }
 }
 
+async function captureAndWrite(
+  tab: chrome.tabs.Tab | undefined,
+  content: string,
+  sourceUrl: string,
+  sourceTitle: string,
+  messageType: MessageType,
+): Promise<void> {
+  const msg = messageType === MessageType.WRITE_CLIPBOARD_IMAGE
+    ? { type: messageType, payload: { url: content } }
+    : { type: messageType, payload: { text: content } };
+  await dispatchClipboardWrite(tab, msg);
+  await handleClipCaptured({ content, sourceUrl, sourceTitle });
+}
+
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const id = info.menuItemId;
   if (!CONTEXT_MENU_IDS.includes(id as typeof CONTEXT_MENU_IDS[number])) return;
@@ -197,8 +215,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   // "Copy image" — write the actual image data to clipboard, save URL to history
   if (id === 'clipjar-copy-image-data') {
     if (!srcUrl) return;
-    await dispatchClipboardWrite(tab, { type: MessageType.WRITE_CLIPBOARD_IMAGE, payload: { url: srcUrl } });
-    await handleClipCaptured({ content: srcUrl, sourceUrl, sourceTitle });
+    await captureAndWrite(tab, srcUrl, sourceUrl, sourceTitle, MessageType.WRITE_CLIPBOARD_IMAGE);
     return;
   }
 
@@ -210,8 +227,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
   if (!content) return;
 
-  await dispatchClipboardWrite(tab, { type: MessageType.WRITE_CLIPBOARD, payload: { text: content } });
-  await handleClipCaptured({ content, sourceUrl, sourceTitle });
+  await captureAndWrite(tab, content, sourceUrl, sourceTitle, MessageType.WRITE_CLIPBOARD);
 });
 
 // Keyboard shortcut: copy most recent clip without opening popup

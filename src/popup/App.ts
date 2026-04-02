@@ -109,6 +109,7 @@ export function initApp(root: HTMLElement): void {
 
       case 'Enter': {
         e.preventDefault();
+        if (state.selectedIndex < 0 || state.selectedIndex >= state.clips.length) break;
         const clip = state.clips[state.selectedIndex];
         if (clip) handleSelect(clip);
         break;
@@ -136,6 +137,7 @@ export function initApp(root: HTMLElement): void {
       case 'Backspace': {
         if (e.metaKey || e.ctrlKey) {
           e.preventDefault();
+          if (state.selectedIndex < 0 || state.selectedIndex >= state.clips.length) break;
           const clipToDelete = state.clips[state.selectedIndex];
           if (clipToDelete) {
             sendMessage({ type: MessageType.DELETE_CLIP, payload: { id: clipToDelete.id } });
@@ -153,6 +155,7 @@ export function initApp(root: HTMLElement): void {
       case 's': {
         if (e.metaKey || e.ctrlKey) {
           e.preventDefault();
+          if (state.selectedIndex < 0 || state.selectedIndex >= state.clips.length) break;
           const clipToPin = state.clips[state.selectedIndex];
           if (clipToPin) handlePin(clipToPin.id);
         }

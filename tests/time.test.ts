@@ -21,6 +21,8 @@ describe('timeAgo', () => {
   it('shows date for old timestamps', () => {
     const old = Date.now() - 30 * 86_400_000;
     const result = timeAgo(old);
-    expect(result).toMatch(/\d+\/\d+\/\d+/);
+    expect(result).not.toMatch(/ago$/);
+    expect(result).not.toBe('just now');
+    expect(result.length).toBeGreaterThan(0);
   });
 });

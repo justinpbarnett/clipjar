@@ -1,6 +1,8 @@
 import { MessageType } from '../lib/types';
 
-chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (sender.id !== chrome.runtime.id) return false;
+
   if (msg.type === MessageType.WRITE_CLIPBOARD) {
     const textarea = document.getElementById('cb');
     if (!(textarea instanceof HTMLTextAreaElement)) {

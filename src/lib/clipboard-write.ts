@@ -10,6 +10,7 @@ export async function writeToClipboard(text: string): Promise<boolean> {
     textarea.style.opacity = '0';
     document.body.appendChild(textarea);
     textarea.select();
+    console.warn('[clipjar] clipboard API unavailable, falling back to execCommand');
     const ok = document.execCommand('copy');
     document.body.removeChild(textarea);
     return ok;

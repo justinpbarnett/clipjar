@@ -268,7 +268,7 @@ function handleImport(statusEl: HTMLElement) {
       });
       statusEl.textContent = `Imported ${result.imported} new clips`;
     } catch (err) {
-      statusEl.textContent = `Import failed: ${err}`;
+      statusEl.textContent = `Import failed: ${err instanceof Error ? err.message : 'unknown error'}`;
     }
   });
   input.click();

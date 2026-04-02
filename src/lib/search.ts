@@ -41,20 +41,3 @@ export function searchClips(
   return results.map((r) => r.obj.entry);
 }
 
-// fuzzysort.highlight() HTML-escapes user input before inserting <mark> tags,
-// so the returned string is safe to set via innerHTML.
-function highlightMatch(text: string, query: string): string {
-  if (!query) return escapeHtml(text);
-
-  const result = fuzzysort.single(query, text.slice(0, 500));
-  if (!result) return escapeHtml(text);
-
-  return result.highlight('<mark>', '</mark>') || escapeHtml(text);
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}

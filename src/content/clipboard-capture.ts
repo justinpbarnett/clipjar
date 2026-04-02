@@ -36,7 +36,9 @@ function getRichContent(): string | undefined {
   return undefined;
 }
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (sender.id !== chrome.runtime.id) return false;
+
   if (message.type === MessageType.WRITE_CLIPBOARD) {
     navigator.clipboard.writeText(message.payload.text)
       .then(() => sendResponse({ success: true }))

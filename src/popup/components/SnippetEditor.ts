@@ -56,6 +56,11 @@ export function renderSnippetEditor(
   form.appendChild(btnRow);
   wrapper.appendChild(form);
 
+  function clearInputs() {
+    shortcutInput.value = '';
+    contentInput.value = '';
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const shortcut = shortcutInput.value.trim();
@@ -70,8 +75,7 @@ export function renderSnippetEditor(
     });
 
     showToast('Snippet saved');
-    shortcutInput.value = '';
-    contentInput.value = '';
+    clearInputs();
     hide();
     onSaved();
   });
@@ -83,8 +87,7 @@ export function renderSnippetEditor(
 
   function hide() {
     wrapper.classList.add('hidden');
-    shortcutInput.value = '';
-    contentInput.value = '';
+    clearInputs();
   }
 
   store.subscribe((state) => {
