@@ -87,4 +87,5 @@ export type MessagePayload =
   | { type: MessageType.EXPORT_DATA; payload: undefined }
   | { type: MessageType.IMPORT_DATA; payload: { clips: ClipEntry[]; settings?: UserSettings } }
   | { type: MessageType.WRITE_CLIPBOARD; payload: { text: string } }
+  | { type: MessageType.WRITE_CLIPBOARD_IMAGE; payload: { url: string } }
   | { type: MessageType.CLIP_COUNT; payload: undefined };

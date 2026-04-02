@@ -161,7 +161,8 @@ export function initApp(root: HTMLElement): void {
 
       default: {
         // If a printable character is typed while focus is outside any input, redirect to search bar.
-        // keypress will fire on the now-focused input, so the first character is not lost.
+        // Focusing during keydown routes the subsequent keypress/input events to the new target,
+        // so the first character is not lost.
         if (
           e.key.length === 1 &&
           !e.metaKey && !e.ctrlKey && !e.altKey

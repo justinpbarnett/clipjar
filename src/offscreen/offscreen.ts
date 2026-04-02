@@ -5,12 +5,13 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     const textarea = document.getElementById('cb');
     if (!(textarea instanceof HTMLTextAreaElement)) {
       sendResponse({ success: false });
-      return true;
+      return false;
     }
     textarea.value = msg.payload.text;
     textarea.select();
     const success = document.execCommand('copy');
     sendResponse({ success });
+    return false;
   }
 
   if (msg.type === MessageType.WRITE_CLIPBOARD_IMAGE) {
@@ -25,5 +26,5 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     return true;
   }
 
-  return true;
+  return false;
 });

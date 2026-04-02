@@ -163,18 +163,32 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 });
 
 // Context menu: capture addresses from right-click actions that bypass the copy event
+const CONTEXT_MENU_IDS = ['clipjar-copy-text', 'clipjar-copy-link', 'clipjar-copy-image', 'clipjar-copy-image-data', 'clipjar-copy-media'] as const;
+
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({ id: 'clipjar-copy-text',  title: 'Copy',               contexts: ['selection'] });
-  chrome.contextMenus.create({ id: 'clipjar-copy-link',  title: 'Copy link address',  contexts: ['link'] });
-  chrome.contextMenus.create({ id: 'clipjar-copy-image', title: 'Copy image address', contexts: ['image'] });
-  chrome.contextMenus.create({ id: 'clipjar-copy-image-data', title: 'Copy image',    contexts: ['image'] });
-  chrome.contextMenus.create({ id: 'clipjar-copy-media', title: 'Copy media address', contexts: ['video', 'audio'] });
+  chrome.contextMenus.removeAll(() => {
+    chrome.contextMenus.create({ id: 'clipjar-copy-text',       title: 'Copy',               contexts: ['selection'] });
+    chrome.contextMenus.create({ id: 'clipjar-copy-link',       title: 'Copy link address',  contexts: ['link'] });
+    chrome.contextMenus.create({ id: 'clipjar-copy-image',      title: 'Copy image address', contexts: ['image'] });
+    chrome.contextMenus.create({ id: 'clipjar-copy-image-data', title: 'Copy image',         contexts: ['image'] });
+    chrome.contextMenus.create({ id: 'clipjar-copy-media',      title: 'Copy media address', contexts: ['video', 'audio'] });
+  });
 });
+
+async function dispatchClipboardWrite(tab: chrome.tabs.Tab | undefined, message: object): Promise<void> {
+  if (typeof chrome.offscreen === 'undefined') {
+    if (tab?.id != null) {
+      chrome.tabs.sendMessage(tab.id, message);
+    }
+  } else {
+    await ensureOffscreen();
+    chrome.runtime.sendMessage(message);
+  }
+}
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const id = info.menuItemId;
-  const ALL_IDS = ['clipjar-copy-text', 'clipjar-copy-link', 'clipjar-copy-image', 'clipjar-copy-image-data', 'clipjar-copy-media'];
-  if (!ALL_IDS.includes(id as string)) return;
+  if (!CONTEXT_MENU_IDS.includes(id as typeof CONTEXT_MENU_IDS[number])) return;
 
   const srcUrl = info.srcUrl;
   const sourceUrl = tab?.url ?? info.pageUrl ?? '';
@@ -183,14 +197,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   // "Copy image" — write the actual image data to clipboard, save URL to history
   if (id === 'clipjar-copy-image-data') {
     if (!srcUrl) return;
-    if (typeof chrome.offscreen === 'undefined') {
-      if (tab?.id != null) {
-        chrome.tabs.sendMessage(tab.id, { type: MessageType.WRITE_CLIPBOARD_IMAGE, payload: { url: srcUrl } });
-      }
-    } else {
-      await ensureOffscreen();
-      chrome.runtime.sendMessage({ type: MessageType.WRITE_CLIPBOARD_IMAGE, payload: { url: srcUrl } });
-    }
+    await dispatchClipboardWrite(tab, { type: MessageType.WRITE_CLIPBOARD_IMAGE, payload: { url: srcUrl } });
     await handleClipCaptured({ content: srcUrl, sourceUrl, sourceTitle });
     return;
   }
@@ -203,15 +210,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
   if (!content) return;
 
-  if (typeof chrome.offscreen === 'undefined') {
-    if (tab?.id != null) {
-      chrome.tabs.sendMessage(tab.id, { type: MessageType.WRITE_CLIPBOARD, payload: { text: content } });
-    }
-  } else {
-    await ensureOffscreen();
-    chrome.runtime.sendMessage({ type: MessageType.WRITE_CLIPBOARD, payload: { text: content } });
-  }
-
+  await dispatchClipboardWrite(tab, { type: MessageType.WRITE_CLIPBOARD, payload: { text: content } });
   await handleClipCaptured({ content, sourceUrl, sourceTitle });
 });
 
