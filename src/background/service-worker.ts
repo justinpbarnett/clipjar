@@ -93,7 +93,7 @@ async function handleSaveSnippet(payload: SaveSnippetPayload): Promise<ClipEntry
         chrome.tabs.sendMessage(tab.id, { type: MessageType.SNIPPETS_UPDATED }).catch(() => {});
       }
     }
-  });
+  }).catch((err) => console.error('[clippy] tabs.query failed:', err));
   return clip;
 }
 
@@ -168,11 +168,19 @@ chrome.commands.onCommand.addListener(async (command) => {
     const clips = await getRecentClips(1);
     if (clips.length === 0) return;
 
-    await ensureOffscreen();
-    await chrome.runtime.sendMessage({
-      type: 'WRITE_CLIPBOARD',
-      payload: { text: clips[0].content },
-    });
+    const text = clips[0].content;
+    if (typeof chrome.offscreen === 'undefined') {
+      // Firefox: relay to the content script already running on the active tab.
+      // Content scripts run in an isolated JS world so page overrides of
+      // navigator.clipboard cannot intercept the write.
+      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+      if (tab?.id != null && tab.url?.startsWith('http')) {
+        chrome.tabs.sendMessage(tab.id, { type: MessageType.WRITE_CLIPBOARD, payload: { text } });
+      }
+    } else {
+      await ensureOffscreen();
+      chrome.runtime.sendMessage({ type: MessageType.WRITE_CLIPBOARD, payload: { text } });
+    }
   }
 });
 

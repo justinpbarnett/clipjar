@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const extensionPath = path.resolve(__dirname, '..', 'dist');
+const extensionPath = path.resolve(__dirname, '..', 'dist-chrome');
 const screenshotDir = path.resolve(__dirname, '..', 'screenshots');
 
 async function run() {
