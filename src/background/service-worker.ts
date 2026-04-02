@@ -202,7 +202,18 @@ async function captureAndWrite(
   sourceTitle: string,
   messageType: MessageType.WRITE_CLIPBOARD | MessageType.WRITE_CLIPBOARD_IMAGE,
 ): Promise<void> {
-  await dispatchClipboardWrite(tab, buildClipboardMessage(messageType, content));
+  const msg = buildClipboardMessage(messageType, content);
+  if (messageType === MessageType.WRITE_CLIPBOARD_IMAGE) {
+    // navigator.clipboard.write() for binary data does not work in offscreen
+    // documents. Route image writes directly to the content script in the tab
+    // where the user right-clicked. The clipboardWrite extension permission
+    // grants clipboard access there without requiring an active user gesture.
+    if (tab?.id != null) {
+      chrome.tabs.sendMessage(tab.id, msg).catch(() => {});
+    }
+  } else {
+    await dispatchClipboardWrite(tab, msg);
+  }
   await handleClipCaptured({ content, sourceUrl, sourceTitle });
 }
 
