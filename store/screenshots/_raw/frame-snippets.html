@@ -1,69 +1,168 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,600;1,300;1,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{
-  width:1280px;height:800px;overflow:hidden;background:#080503;
-  display:flex;align-items:center;padding:0 90px;gap:70px;position:relative;
+
+:root{
+  --bg:#060402;
+  --surface:#0E0905;
+  --border:#1E1005;
+  --amber:#C47830;
+  --gold:#E8A840;
+  --cream:#EDD8B0;
+  --muted:#503818;
+  --dim:#180C04;
 }
-body::after{
-  content:'';position:absolute;right:360px;top:50%;transform:translateY(-50%);
-  width:500px;height:500px;border-radius:50%;
-  background:radial-gradient(circle,rgba(200,122,56,0.08) 0%,transparent 70%);
-  pointer-events:none;
-}
+
+html,body{width:1280px;height:800px;overflow:hidden;background:var(--bg)}
+body{display:flex;align-items:stretch;position:relative}
+
 body::before{
   content:'';position:absolute;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-size:200px 200px;opacity:0.4;pointer-events:none;z-index:0;
+  background-image:radial-gradient(circle,rgba(196,120,48,0.07) 1px,transparent 1px);
+  background-size:32px 32px;
+  pointer-events:none;z-index:0;
 }
-.left{flex:1;position:relative;z-index:1}
-.right{position:relative;z-index:1;flex-shrink:0}
-.logo{display:flex;align-items:center;gap:10px;margin-bottom:44px}
-.logo-jar{color:#C87A38}
-.logo-name{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#C87A38;letter-spacing:0.2em;text-transform:uppercase}
-h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:64px;font-weight:600;line-height:1.05;color:#EED9B5;margin-bottom:22px;letter-spacing:-0.01em}
-h1 em{font-style:italic;color:#E8A848}
-p{font-family:'Space Mono',monospace;font-size:13px;line-height:1.8;color:#5A4030;max-width:360px;letter-spacing:0.02em}
-.rule{width:40px;height:1.5px;background:#C87A38;margin-bottom:28px;opacity:0.6}
-.label-tag{display:inline-block;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#5A4030;border:1px solid #2C1D0A;padding:4px 10px;border-radius:2px;margin-bottom:22px}
-.frame{background:#0D0A06;border-radius:6px;box-shadow:0 0 0 1px #2C1D0A,0 40px 80px rgba(0,0,0,0.8),0 0 80px rgba(200,122,56,0.12);overflow:hidden}
-.frame-bar{padding:9px 12px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #2C1D0A;background:#141009}
-.dot{width:9px;height:9px;border-radius:50%}
+
+.grain{
+  position:absolute;inset:0;pointer-events:none;z-index:1;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px 200px;opacity:0.5;
+}
+
+.bar{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--amber);opacity:0.75;z-index:3}
+
+.glow{
+  position:absolute;right:160px;top:50%;transform:translateY(-50%);
+  width:540px;height:640px;border-radius:50%;
+  background:radial-gradient(ellipse,rgba(196,120,48,0.11) 0%,transparent 62%);
+  pointer-events:none;z-index:0;
+}
+
+.numeral{
+  position:absolute;left:340px;bottom:-60px;
+  font-family:'Spectral',Georgia,serif;
+  font-size:480px;font-weight:600;line-height:1;
+  color:transparent;-webkit-text-stroke:1px rgba(196,120,48,0.07);
+  pointer-events:none;user-select:none;z-index:0;letter-spacing:-0.05em;
+}
+
+.left{
+  width:520px;flex-shrink:0;
+  padding:0 56px 0 68px;
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;justify-content:center;
+  border-right:1px solid var(--border);
+}
+
+.right{
+  flex:1;
+  display:flex;align-items:center;justify-content:center;
+  padding:60px 64px;
+  position:relative;z-index:2;
+}
+
+.logo{
+  position:absolute;top:44px;left:68px;
+  display:flex;align-items:center;gap:9px;
+}
+.logo svg{color:var(--amber)}
+.logo-name{
+  font-family:'Space Mono',monospace;
+  font-size:10px;font-weight:700;
+  color:var(--amber);letter-spacing:0.28em;text-transform:uppercase;
+}
+
+.ordinal{
+  font-family:'Space Mono',monospace;
+  font-size:10px;color:var(--muted);letter-spacing:0.18em;
+  margin-bottom:22px;
+}
+
+.rule{width:36px;height:1.5px;background:var(--amber);opacity:0.55;margin-bottom:30px}
+
+h1{
+  font-family:'Spectral',Georgia,serif;
+  font-size:60px;font-weight:300;line-height:1.08;
+  color:var(--cream);letter-spacing:-0.025em;
+  margin-bottom:28px;
+}
+h1 em{font-style:italic;font-weight:600;color:var(--gold)}
+
+p{
+  font-family:'Space Mono',monospace;
+  font-size:11.5px;line-height:1.9;
+  color:var(--muted);letter-spacing:0.02em;
+  max-width:340px;
+  margin-bottom:28px;
+}
+
+/* Snippet demo */
+.snippet-demo{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 16px;
+  background:var(--dim);
+  border:1px solid var(--border);
+  border-radius:3px;
+  max-width:340px;
+}
+.snip-key{
+  font-family:'Space Mono',monospace;
+  font-size:13px;font-weight:700;
+  color:var(--gold);letter-spacing:0.04em;
+  background:#0D0A06;border:1px solid rgba(232,168,64,0.25);
+  padding:4px 10px;border-radius:2px;flex-shrink:0;
+}
+.snip-arrow{color:var(--muted);font-size:16px;flex-shrink:0}
+.snip-val{
+  font-family:'Space Mono',monospace;
+  font-size:10px;color:var(--muted);letter-spacing:0.02em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+.popup-wrap{position:relative}
+.corner{position:absolute;width:14px;height:14px}
+.corner.tl{top:-9px;left:-9px;border-top:1.5px solid var(--amber);border-left:1.5px solid var(--amber);opacity:0.55}
+.corner.tr{top:-9px;right:-9px;border-top:1.5px solid var(--amber);border-right:1.5px solid var(--amber);opacity:0.55}
+.corner.bl{bottom:-9px;left:-9px;border-bottom:1.5px solid var(--amber);border-left:1.5px solid var(--amber);opacity:0.55}
+.corner.br{bottom:-9px;right:-9px;border-bottom:1.5px solid var(--amber);border-right:1.5px solid var(--amber);opacity:0.55}
+
+.frame{
+  background:#0D0A06;border-radius:5px;
+  border:1px solid var(--border);
+  box-shadow:0 0 0 1px rgba(196,120,48,0.1),0 36px 90px rgba(0,0,0,0.95),0 0 70px rgba(196,120,48,0.09);
+  overflow:hidden;
+}
+.frame-accent{height:2px;background:linear-gradient(90deg,var(--amber),rgba(196,120,48,0.15) 75%,transparent)}
+.frame-bar{
+  padding:9px 12px;display:flex;align-items:center;gap:7px;
+  border-bottom:1px solid var(--border);background:#0D0A06;
+}
+.dot{width:8px;height:8px;border-radius:50%}
 .dot-r{background:#ff5f57}.dot-y{background:#febc2e}.dot-g{background:#28c840}
 img{display:block;width:380px;height:500px}
 
-/* Snippet demo callout */
-.snippet-demo{
-  margin-top:28px;
-  display:flex;align-items:center;gap:12px;
-}
-.snippet-shortcut{
+.frame-caption{
+  position:absolute;bottom:-24px;left:0;
   font-family:'Space Mono',monospace;
-  font-size:14px;font-weight:700;color:#E8A848;
-  background:#1C1509;border:1px solid #3C2A10;
-  padding:5px 12px;border-radius:3px;
-  letter-spacing:0.06em;
-}
-.snippet-arrow{color:#3C2A10;font-size:18px}
-.snippet-result{
-  font-family:'Space Mono',monospace;
-  font-size:11px;color:#5A4030;
-  background:#0D0A06;border:1px solid #2C1D0A;
-  padding:5px 12px;border-radius:3px;
-  letter-spacing:0.02em;
-  max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--muted);opacity:0.7;
 }
 </style>
 </head>
 <body>
+  <div class="grain"></div>
+  <div class="bar"></div>
+  <div class="glow"></div>
+  <div class="numeral">04</div>
+
   <div class="left">
     <div class="logo">
-      <svg class="logo-jar" width="18" height="22" viewBox="0 0 13 17" fill="none">
+      <svg width="16" height="20" viewBox="0 0 13 17" fill="none">
         <rect x="2" y="0.5" width="9" height="2.5" rx="0.8" fill="currentColor" opacity="0.85"/>
         <rect x="3.5" y="3" width="6" height="1.5" fill="currentColor" opacity="0.55"/>
         <path d="M1.5 4.5L1 14Q1 15.5 2.5 15.5H10.5Q12 15.5 12 14L11.5 4.5Z" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-opacity="0.65" stroke-width="0.9"/>
@@ -71,24 +170,33 @@ img{display:block;width:380px;height:500px}
       </svg>
       <span class="logo-name">Clipjar</span>
     </div>
-    <div class="label-tag">Text snippets</div>
-    <h1>Type a code.<br><em>Paste a paragraph.</em></h1>
+    <div class="ordinal">04 / 05 &nbsp;&middot;&nbsp; Text snippets</div>
     <div class="rule"></div>
-    <p>Create shortcuts that expand on the spot.<br>Works on any page, no popup needed.</p>
+    <h1>Type a code.<br><em>Paste anything.</em></h1>
+    <p>Define a short trigger, expand on keystroke.<br>Works in every text field, no popup needed.</p>
     <div class="snippet-demo">
-      <span class="snippet-shortcut">:br</span>
-      <span class="snippet-arrow">&#8594;</span>
-      <span class="snippet-result">Best regards, Justin Barnett</span>
+      <span class="snip-key">:br</span>
+      <span class="snip-arrow">&#8594;</span>
+      <span class="snip-val">Best regards, Justin Barnett</span>
     </div>
   </div>
+
   <div class="right">
-    <div class="frame">
-      <div class="frame-bar">
-        <div class="dot dot-r"></div>
-        <div class="dot dot-y"></div>
-        <div class="dot dot-g"></div>
+    <div class="popup-wrap">
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
+      <div class="frame">
+        <div class="frame-accent"></div>
+        <div class="frame-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+        </div>
+        <img src="popup-snippets.png"/>
       </div>
-      <img src="popup-snippets.png" />
+      <div class="frame-caption">popup &mdash; 380 &times; 500</div>
     </div>
   </div>
 </body>

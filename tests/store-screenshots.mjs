@@ -87,7 +87,7 @@ async function openPopup(context, extensionId) {
   return page;
 }
 
-function frameHtml(imgPath, title, subtitle) {
+function UNUSED_frameHtml(imgPath, title, subtitle) {
   const rel = path.basename(imgPath);
   return `<!DOCTYPE html>
 <html>
@@ -246,15 +246,10 @@ async function run() {
     await page.close();
 
     const framePath = path.join(rawDir, 'frame-history.html');
-    fs.writeFileSync(framePath, frameHtml(
-      rawPath,
-      'Your clipboard history,<br>always within reach',
-      'Clipjar saves everything you copy with source, timestamp, and type detection. Get it back in one keystroke.',
-    ));
     const fp = await context.newPage();
     await fp.setViewportSize({ width: 1280, height: 800 });
     await fp.goto(`file://${framePath}`);
-    await fp.waitForTimeout(200);
+    await fp.waitForTimeout(800);
     await fp.screenshot({ path: path.join(outDir, '01-history.png') });
     await fp.close();
     console.log('01-history.png');
@@ -273,15 +268,10 @@ async function run() {
     await page.close();
 
     const framePath = path.join(rawDir, 'frame-search.html');
-    fs.writeFileSync(framePath, frameHtml(
-      rawPath,
-      'Find anything<br>in milliseconds',
-      'Fuzzy search across your entire clipboard history. Works with partial matches and typos.',
-    ));
     const fp = await context.newPage();
     await fp.setViewportSize({ width: 1280, height: 800 });
     await fp.goto(`file://${framePath}`);
-    await fp.waitForTimeout(200);
+    await fp.waitForTimeout(800);
     await fp.screenshot({ path: path.join(outDir, '02-search.png') });
     await fp.close();
     console.log('02-search.png');
@@ -293,10 +283,10 @@ async function run() {
     await page.waitForTimeout(200);
     // Pin first two clips
     for (let i = 0; i < 2; i++) {
-      const clip = page.locator('.clip-item').nth(i);
+      const clip = page.locator('.jar-clip').nth(i);
       await clip.hover();
       await page.waitForTimeout(150);
-      const pinBtn = clip.locator('button[title*="in"]').first();
+      const pinBtn = clip.locator('button[title="Pin"]').first();
       if (await pinBtn.count() > 0) { await pinBtn.click(); await page.waitForTimeout(250); }
     }
     await page.locator('button[data-tab="favorites"]').click();
@@ -306,15 +296,10 @@ async function run() {
     await page.close();
 
     const framePath = path.join(rawDir, 'frame-favorites.html');
-    fs.writeFileSync(framePath, frameHtml(
-      rawPath,
-      'Pin the clips<br>you reuse most',
-      'Star any item to keep it at the top. Perfect for addresses, account numbers, and boilerplate.',
-    ));
     const fp = await context.newPage();
     await fp.setViewportSize({ width: 1280, height: 800 });
     await fp.goto(`file://${framePath}`);
-    await fp.waitForTimeout(200);
+    await fp.waitForTimeout(800);
     await fp.screenshot({ path: path.join(outDir, '03-favorites.png') });
     await fp.close();
     console.log('03-favorites.png');
@@ -359,15 +344,10 @@ async function run() {
     await page.close();
 
     const framePath = path.join(rawDir, 'frame-snippets.html');
-    fs.writeFileSync(framePath, frameHtml(
-      rawPath,
-      'Type a shortcut,<br>paste a full message',
-      'Create text snippets triggered by short codes. Type ;br and it expands to your full email sign-off.',
-    ));
     const fp = await context.newPage();
     await fp.setViewportSize({ width: 1280, height: 800 });
     await fp.goto(`file://${framePath}`);
-    await fp.waitForTimeout(200);
+    await fp.waitForTimeout(800);
     await fp.screenshot({ path: path.join(outDir, '04-snippets.png') });
     await fp.close();
     console.log('04-snippets.png');
@@ -384,75 +364,11 @@ async function run() {
     await rawPage.screenshot({ path: rawPath });
     await rawPage.close();
 
-    // Build a custom frame for the options page (wider screenshot, no browser chrome)
     const optionsFramePath = path.join(rawDir, 'frame-options.html');
-    fs.writeFileSync(optionsFramePath, `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8" />
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  width: 1280px; height: 800px; overflow: hidden;
-  background: radial-gradient(ellipse at 65% 40%, #1e0a4a 0%, #0d0620 40%, #050210 100%);
-  display: flex; align-items: center; padding: 0 80px; gap: 80px;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
-body::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image: linear-gradient(rgba(109,40,217,0.06) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(109,40,217,0.06) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
-.left { flex: 1; position: relative; z-index: 1; }
-.logo { display: flex; align-items: center; gap: 12px; margin-bottom: 36px; }
-.logo-icon { font-size: 32px; }
-.logo-name { font-size: 22px; font-weight: 700; color: rgba(255,255,255,0.9); letter-spacing: -0.01em; }
-h1 { font-size: 46px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; color: #fff; margin-bottom: 20px; }
-p { font-size: 20px; line-height: 1.6; color: rgba(255,255,255,0.55); max-width: 380px; }
-.right { position: relative; z-index: 1; flex-shrink: 0; }
-.card {
-  background: #fff; border-radius: 12px; overflow: hidden;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.08),
-              0 0 60px rgba(109,40,217,0.25);
-  width: 560px;
-}
-.card-bar {
-  background: #f0f0f0; padding: 10px 14px;
-  display: flex; align-items: center; gap: 8px;
-  border-bottom: 1px solid #ddd;
-}
-.dot { width: 10px; height: 10px; border-radius: 50%; }
-.dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
-img { display: block; width: 560px; }
-</style>
-</head>
-<body>
-  <div class="left">
-    <div class="logo">
-      <span class="logo-icon">📋</span>
-      <span class="logo-name">Clipjar</span>
-    </div>
-    <h1>Customize to your workflow</h1>
-    <p>Set your history limit, choose a theme, control snippet expansion, and manage your data.</p>
-  </div>
-  <div class="right">
-    <div class="card">
-      <div class="card-bar">
-        <div class="dot dot-r"></div>
-        <div class="dot dot-y"></div>
-        <div class="dot dot-g"></div>
-      </div>
-      <img src="options-raw.png" />
-    </div>
-  </div>
-</body>
-</html>`);
     const fp = await context.newPage();
     await fp.setViewportSize({ width: 1280, height: 800 });
     await fp.goto(`file://${optionsFramePath}`);
-    await fp.waitForTimeout(200);
+    await fp.waitForTimeout(800);
     await fp.screenshot({ path: path.join(outDir, '05-options.png') });
     await fp.close();
     console.log('05-options.png');
@@ -461,11 +377,10 @@ img { display: block; width: 560px; }
   // ── promo tile 440x280 ────────────────────────────────────────────────────
   {
     const framePath = path.join(rawDir, 'promo-tile.html');
-    fs.writeFileSync(framePath, promoHtml());
     const fp = await context.newPage();
     await fp.setViewportSize({ width: 440, height: 280 });
     await fp.goto(`file://${framePath}`);
-    await fp.waitForTimeout(200);
+    await fp.waitForTimeout(800);
     await fp.screenshot({ path: path.join(outDir, 'promo-tile-440x280.png') });
     await fp.close();
     console.log('promo-tile-440x280.png');
