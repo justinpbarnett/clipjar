@@ -5,7 +5,8 @@
   "description": "The clipboard manager Firefox deserves. Free, private, keyboard-first.",
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "contextMenus"
   ],
   "optional_permissions": [
     "clipboardRead"

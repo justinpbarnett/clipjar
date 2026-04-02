@@ -162,6 +162,39 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   return true; // async response
 });
 
+// Context menu: capture link URLs from right-click "Copy link address" alternative
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: 'clipjar-copy-link',
+    title: 'Copy link address',
+    contexts: ['link'],
+  });
+});
+
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId !== 'clipjar-copy-link' || !info.linkUrl) return;
+
+  const url = info.linkUrl;
+
+  // Write to clipboard
+  if (typeof chrome.offscreen === 'undefined') {
+    // Firefox: relay via content script
+    if (tab?.id != null) {
+      chrome.tabs.sendMessage(tab.id, { type: MessageType.WRITE_CLIPBOARD, payload: { text: url } });
+    }
+  } else {
+    await ensureOffscreen();
+    chrome.runtime.sendMessage({ type: MessageType.WRITE_CLIPBOARD, payload: { text: url } });
+  }
+
+  // Save to history
+  await handleClipCaptured({
+    content: url,
+    sourceUrl: tab?.url ?? info.pageUrl ?? '',
+    sourceTitle: tab?.title ?? '',
+  });
+});
+
 // Keyboard shortcut: copy most recent clip without opening popup
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === 'copy-first') {

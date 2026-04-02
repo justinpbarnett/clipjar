@@ -7,7 +7,8 @@
     "activeTab",
     "storage",
     "offscreen",
-    "sidePanel"
+    "sidePanel",
+    "contextMenus"
   ],
   "optional_permissions": [
     "clipboardRead"
