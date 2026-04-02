@@ -119,6 +119,10 @@ export function initApp(root: HTMLElement): void {
         break;
 
       case 'Tab': {
+        // Let Tab work normally inside the snippet editor so fields are navigable
+        const editorEl = document.querySelector('.jar-editor');
+        if (editorEl && editorEl.contains(document.activeElement)) break;
+
         e.preventDefault();
         const tabs: PopupState['activeTab'][] = ['all', 'favorites', 'snippets'];
         const currentIdx = tabs.indexOf(state.activeTab);
@@ -151,6 +155,23 @@ export function initApp(root: HTMLElement): void {
           e.preventDefault();
           const clipToPin = state.clips[state.selectedIndex];
           if (clipToPin) handlePin(clipToPin.id);
+        }
+        break;
+      }
+
+      default: {
+        // If a printable character is typed while focus is outside any input, redirect to search bar.
+        // keypress will fire on the now-focused input, so the first character is not lost.
+        if (
+          e.key.length === 1 &&
+          !e.metaKey && !e.ctrlKey && !e.altKey
+        ) {
+          const active = document.activeElement;
+          const tag = active?.tagName;
+          if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+            const searchInput = document.getElementById('search') as HTMLInputElement | null;
+            searchInput?.focus();
+          }
         }
         break;
       }

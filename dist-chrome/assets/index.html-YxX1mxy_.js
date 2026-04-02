@@ -1,1 +1,0 @@
-import"./messages-q-HxjELW.js";import{i}from"./App-Thb-Zec4.js";import"./types-DAQ-VXlD.js";import"./constants-Cw9bVvMb.js";const t=document.getElementById("app");t&&(t.style.width="100%",t.style.maxHeight="100vh",i(t));
