@@ -1,6 +1,6 @@
 # Clippy
 
-The clipboard manager your browser deserves. Free, private, keyboard-first. Works in Chrome and Firefox.
+Free clipboard manager for Chrome and Firefox. Saves everything you copy, searches in milliseconds, stays local.
 
 ![Clippy demo](demo.gif)
 
@@ -12,24 +12,24 @@ Clippy has none of them. Everything stays in your browser's local IndexedDB. No 
 
 ## Features
 
-- **Clipboard history** that captures every copy across all tabs
-- **Fuzzy search** across thousands of clips in under 10ms
-- **Type detection** automatically tags clips as URL, Email, Phone, Code, JSON, or Text
-- **Favorites** to pin clips you use all the time
-- **Text snippets** with `:shortcut` expansion in any text field
-- **Source tracking** shows where each clip came from
-- **Password skip** automatically ignores copies from password fields
-- **Keyboard-first** with full arrow key, Enter, Escape, and Tab navigation
-- **Dark/light mode** that follows your system preference
-- **Import/Export** for full JSON backup of all your data
-- **Side panel** for a persistent view while you browse
-- **Minimal permissions** captures text via `window.getSelection()`, so no `clipboardRead` permission needed at install
+- Saves every copy across all tabs to local IndexedDB
+- Fuzzy search across thousands of clips in under 10ms
+- Auto-tags clips as URL, email, phone, code, JSON, or plain text
+- Pin clips you use constantly to a Favorites tab
+- Text snippets: define `:sig` once, type it anywhere, it expands
+- Shows which site each clip came from
+- Skips password fields automatically
+- Arrow keys, Enter, Tab, Escape, no mouse required
+- Follows your system dark/light preference
+- Full JSON export and import
+- Side panel for a persistent view while you browse
+- No `clipboardRead` permission at install; captured via the native copy event
 
 ## Install
 
 ### From source
 
-**Prerequisites:** Node.js 18+ and npm.
+Prerequisites: Node.js 18+ and npm.
 
 ```bash
 git clone https://github.com/justinpbarnett/clippy.git
@@ -55,11 +55,11 @@ npm run build:firefox
 
 1. Open `about:debugging#/runtime/this-firefox`
 2. Click **Load Temporary Add-on**
-3. Select any file inside `dist-firefox/` (e.g. `manifest.json`)
+3. Select any file inside `dist-firefox/`
 
 For a permanent install, package it as a signed XPI via [about:addons](about:addons) or the [Firefox Add-on Hub](https://addons.mozilla.org/developers/).
 
-Done. Pin Clippy to your toolbar and press **Cmd+Shift+V** (Mac) or **Ctrl+Shift+V** (Windows/Linux) to open it.
+Pin Clippy to your toolbar and press **Cmd+Shift+V** (Mac) or **Ctrl+Shift+V** (Windows/Linux) to open it.
 
 ### Claude Code auto-setup
 
@@ -150,11 +150,11 @@ npm run zip            # Package dist-chrome/ for Chrome Web Store
 
 ## Privacy
 
-- All data stored locally in IndexedDB. Nothing leaves your browser.
-- Zero network requests. No analytics, no telemetry, no tracking.
-- No `clipboardRead` permission at install. Text is captured via `window.getSelection()` inside the native copy event.
-- `clipboardRead` is listed as an optional permission but is not currently requested by any feature.
-- Open source. Read every line.
+All data is stored in IndexedDB locally. Nothing leaves your browser: no network requests, no analytics, no telemetry.
+
+Text is captured via `window.getSelection()` inside the native copy event, so `clipboardRead` isn't needed at install. It's listed as an optional permission but nothing currently requests it.
+
+Open source. Read every line.
 
 ## License
 
