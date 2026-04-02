@@ -6,49 +6,49 @@
 
 **Short description (132 chars max):**
 ```
-Free clipboard manager. Saves everything you copy. Search, pin, and reuse with full keyboard support.
+Free clipboard manager. Saves everything you copy. Search, pin, and paste it back with keyboard shortcuts.
 ```
 
 **Detailed description:**
 
 ```
-Clippy saves everything you copy and puts it back within reach in seconds.
+Clippy saves everything you copy so you can find it again in seconds.
 
-Every time you copy text, Clippy captures it with the source, timestamp, and content type. Open the popup with Cmd+Shift+V (or Ctrl+Shift+V), search, navigate with arrow keys, and press Enter to paste.
+Copy text and Clippy captures it with the source URL, timestamp, and content type. Hit Cmd+Shift+V (or Ctrl+Shift+V) to open the popup, type to search, arrow keys to navigate, Enter to paste.
 
 FEATURES
 
 Clipboard history
-Stores up to 1000 clips (configurable). All data lives in your browser's local IndexedDB. Nothing leaves your device.
+Stores up to 1000 clips (configurable). All data stays in your browser's IndexedDB. Nothing leaves your machine.
 
-Instant search
-Fuzzy search across everything you have copied. Works for partial matches and typos.
+Search
+Fuzzy matching across your whole history. Handles partial matches and typos.
 
 Favorites
-Pin clips you reuse constantly. They stay at the top of the list across sessions.
+Pin clips you use often. They stick to the top of the list across sessions.
 
 Text snippets
-Create short trigger shortcuts (like ;email) that expand to full text blocks automatically as you type. No popup needed.
+Set up trigger shortcuts (like ;email) that expand to full text blocks as you type. No popup needed.
 
 Source tracking
-See which website a clip came from. Clips captured from password fields are automatically skipped.
+See which site a clip came from. Password fields are ignored.
 
 Content type detection
-Clips are automatically tagged as URL, email, code, JSON, or plain text so you can tell at a glance what each clip is.
+Clips get tagged as URL, email, code, JSON, or plain text so you can scan the list quickly.
 
-Keyboard-first
-Full keyboard navigation. Open, search, select, copy, delete, and switch tabs without touching the mouse.
+Keyboard first
+Navigate everything with the keyboard. Open, search, select, copy, delete, switch tabs. Mouse optional.
 
 Sidebar panel
-Pin Clippy as a persistent sidebar for quick access alongside any page.
+Pin Clippy as a sidebar next to whatever page you're on.
 
 PRIVACY
 
-No accounts. No servers. No analytics. Your clipboard data is stored locally and never transmitted anywhere. The clipboardRead permission is optional and only requested if you enable it in settings.
+No accounts. No servers. No analytics. Your clipboard data stays on your machine. The clipboardRead permission is optional; Clippy only asks for it if you turn it on in settings.
 
 OPEN SOURCE
 
-Clippy is free and open source. Review the code, file issues, or contribute at github.com/justinpbarnett/clippy.
+Free and open source. Read the code, file issues, or contribute at github.com/justinpbarnett/clippy.
 ```
 
 ---
@@ -59,49 +59,49 @@ Clippy is free and open source. Review the code, file issues, or contribute at g
 
 **Summary (250 chars max):**
 ```
-Free clipboard manager that saves everything you copy. Search history, pin favorites, create text snippets, and paste anything with full keyboard support. 100% local storage.
+Free clipboard manager that saves everything you copy. Search your history, pin favorites, create text snippets, and paste with keyboard shortcuts. All data stays on your machine.
 ```
 
 **Description:**
 
 ```
-Clippy saves everything you copy and puts it back within reach in seconds.
+Clippy saves everything you copy so you can find it again in seconds.
 
-Every time you copy text, Clippy captures it with the source, timestamp, and content type. Open the popup with Ctrl+Shift+V, search, navigate with arrow keys, and press Enter to paste.
+Copy text and Clippy captures it with the source URL, timestamp, and content type. Hit Ctrl+Shift+V to open the popup, type to search, arrow keys to navigate, Enter to paste.
 
 FEATURES
 
 Clipboard history
-Stores up to 1000 clips (configurable). All data lives in your browser's local IndexedDB. Nothing leaves your device.
+Stores up to 1000 clips (configurable). All data stays in your browser's IndexedDB. Nothing leaves your machine.
 
-Instant search
-Fuzzy search across everything you have copied. Works for partial matches and typos.
+Search
+Fuzzy matching across your whole history. Handles partial matches and typos.
 
 Favorites
-Pin clips you reuse constantly. They stay at the top of the list across sessions.
+Pin clips you use often. They stick to the top of the list across sessions.
 
 Text snippets
-Create short trigger shortcuts (like ;email) that expand into full text blocks automatically as you type.
+Set up trigger shortcuts (like ;email) that expand to full text blocks as you type.
 
 Source tracking
-See which website a clip came from. Clips captured from password fields are automatically skipped.
+See which site a clip came from. Password fields are ignored.
 
 Content type detection
-Clips are automatically tagged as URL, email, code, JSON, or plain text.
+Clips get tagged as URL, email, code, JSON, or plain text.
 
-Keyboard-first
-Full keyboard navigation. Open, search, select, copy, delete, and switch tabs without touching the mouse.
+Keyboard first
+Navigate everything with the keyboard. Open, search, select, copy, delete, switch tabs. Mouse optional.
 
 Sidebar panel
-Pin Clippy as a persistent sidebar for quick access alongside any page.
+Pin Clippy as a sidebar next to whatever page you're on.
 
 PRIVACY
 
-No accounts. No servers. No analytics. Your clipboard data is stored locally and never transmitted anywhere. The clipboardRead permission is optional and only requested if you enable it in settings. See the full privacy policy at the link below.
+No accounts. No servers. No analytics. Your clipboard data stays on your machine. The clipboardRead permission is optional; Clippy only asks for it if you turn it on in settings. Full privacy policy at the link below.
 
 OPEN SOURCE
 
-Clippy is free and open source. Review the code, file issues, or contribute on GitHub.
+Free and open source. Read the code, file issues, or contribute on GitHub.
 ```
 
 **Privacy policy URL:** https://justinpbarnett.github.io/clippy/privacy
