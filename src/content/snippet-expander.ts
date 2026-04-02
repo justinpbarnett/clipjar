@@ -74,8 +74,6 @@ function handleKeydown(e: KeyboardEvent): void {
   const match = findMatchingSnippet();
   if (!match || !match.shortcut) return;
 
-  e.preventDefault();
-
   const active = document.activeElement;
   if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement) {
     replaceInInput(active, match.shortcut, match.content);
@@ -98,4 +96,4 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.type === MessageType.SNIPPETS_UPDATED) loadSnippets();
 });
 
-document.addEventListener('keydown', handleKeydown, true);
+document.addEventListener('keyup', handleKeydown, true);
