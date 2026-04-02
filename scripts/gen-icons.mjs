@@ -27,7 +27,6 @@ svg{display:block}
 <body>
 <svg width="${size}" height="${size}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="100" height="100" fill="#0D0A06"/>
 
   <!-- Lid, bright amber -->
   <rect x="28" y="7" width="44" height="15" rx="4" fill="#F0B050"/>
@@ -69,7 +68,7 @@ async function run() {
     const buf = await page.screenshot({
       clip: { x: 0, y: 0, width: size, height: size },
       type: 'png',
-      omitBackground: false,
+      omitBackground: true,
     });
 
     const out = join(OUT, `icon-${size}.png`);
