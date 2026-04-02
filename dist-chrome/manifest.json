@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Clippy",
+  "name": "Clipjar",
   "version": "1.0.0",
   "description": "The clipboard manager Chrome deserves. Free, private, keyboard-first.",
   "permissions": [
@@ -23,7 +23,7 @@
     {
       "js": [
         "assets/clipboard-capture.ts-loader-DxZq7Hs7.js",
-        "assets/snippet-expander.ts-loader-LYgKxUzV.js"
+        "assets/snippet-expander.ts-loader-BGkoQMrq.js"
       ],
       "matches": [
         "<all_urls>"
@@ -53,7 +53,7 @@
         "default": "Ctrl+Shift+V",
         "mac": "Command+Shift+V"
       },
-      "description": "Open Clippy clipboard history"
+      "description": "Open Clipjar clipboard history"
     },
     "copy-first": {
       "suggested_key": {
@@ -76,8 +76,8 @@
       "resources": [
         "assets/types-CsvTKnt5.js",
         "assets/clipboard-capture.ts-BoagpF59.js",
-        "assets/constants-CpoauvfA.js",
-        "assets/snippet-expander.ts-zpFyKnMy.js"
+        "assets/constants-Cw9bVvMb.js",
+        "assets/snippet-expander.ts-Dpr-69dz.js"
       ],
       "use_dynamic_url": false
     }

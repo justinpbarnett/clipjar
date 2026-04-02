@@ -1,0 +1,1 @@
+const s={maxHistory:1e3,theme:"system",enableSnippetExpansion:!0,enableSourceTracking:!0,skipPasswordFields:!0,showNotifications:!1,defaultTab:"all"},a=5e4,t=50,e="clipjar-db",n=1,o="clips",c="clipjar-settings",E=50;export{o as C,n as D,a as M,t as P,E as S,e as a,c as b,s as c};
