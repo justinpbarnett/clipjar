@@ -12,5 +12,18 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     const success = document.execCommand('copy');
     sendResponse({ success });
   }
+
+  if (msg.type === MessageType.WRITE_CLIPBOARD_IMAGE) {
+    fetch(msg.payload.url)
+      .then((r) => r.blob())
+      .then((blob) => {
+        const mimeType = blob.type || 'image/png';
+        return navigator.clipboard.write([new ClipboardItem({ [mimeType]: blob })]);
+      })
+      .then(() => sendResponse({ success: true }))
+      .catch(() => sendResponse({ success: false }));
+    return true;
+  }
+
   return true;
 });

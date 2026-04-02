@@ -1,1 +1,1 @@
-(async()=>{await import(chrome.runtime.getURL("assets/src/content/snippet-expander-DsBHbQL8.js"))})();
+(async()=>{await import(chrome.runtime.getURL("assets/src/content/snippet-expander-DhNCdAAq.js"))})();

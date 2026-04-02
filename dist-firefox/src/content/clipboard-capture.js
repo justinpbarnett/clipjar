@@ -1,1 +1,1 @@
-(async()=>{await import(chrome.runtime.getURL("assets/src/content/clipboard-capture-BUEOcL0g.js"))})();
+(async()=>{await import(chrome.runtime.getURL("assets/src/content/clipboard-capture-DdQ3J9HN.js"))})();

@@ -6,7 +6,8 @@
   "permissions": [
     "activeTab",
     "storage",
-    "contextMenus"
+    "contextMenus",
+    "clipboardWrite"
   ],
   "optional_permissions": [
     "clipboardRead"
@@ -78,9 +79,9 @@
     {
       "resources": [
         "assets/constants-C6QKiUsO.js",
-        "assets/src/content/clipboard-capture-BUEOcL0g.js",
-        "assets/src/content/snippet-expander-DsBHbQL8.js",
-        "assets/types-CsvTKnt5.js"
+        "assets/src/content/clipboard-capture-DdQ3J9HN.js",
+        "assets/src/content/snippet-expander-DhNCdAAq.js",
+        "assets/types-DAQ-VXlD.js"
       ],
       "matches": [
         "<all_urls>"

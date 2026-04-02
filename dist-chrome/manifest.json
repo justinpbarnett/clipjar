@@ -8,7 +8,8 @@
     "storage",
     "offscreen",
     "sidePanel",
-    "contextMenus"
+    "contextMenus",
+    "clipboardWrite"
   ],
   "optional_permissions": [
     "clipboardRead"
@@ -23,8 +24,8 @@
   "content_scripts": [
     {
       "js": [
-        "assets/clipboard-capture.ts-loader-DxZq7Hs7.js",
-        "assets/snippet-expander.ts-loader-BGkoQMrq.js"
+        "assets/clipboard-capture.ts-loader-B5qzxhVM.js",
+        "assets/snippet-expander.ts-loader-DxnntShp.js"
       ],
       "matches": [
         "<all_urls>"
@@ -75,10 +76,10 @@
         "<all_urls>"
       ],
       "resources": [
-        "assets/types-CsvTKnt5.js",
-        "assets/clipboard-capture.ts-BoagpF59.js",
+        "assets/types-DAQ-VXlD.js",
+        "assets/clipboard-capture.ts-DYprnG-E.js",
         "assets/constants-Cw9bVvMb.js",
-        "assets/snippet-expander.ts-Dpr-69dz.js"
+        "assets/snippet-expander.ts-Dptv_IkF.js"
       ],
       "use_dynamic_url": false
     }
