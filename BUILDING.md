@@ -24,10 +24,10 @@ npm run build:firefox
 
 # Package it
 npm run zip:firefox
-# Output: clipjar-firefox-1.1.0.zip
+# Output: clipjar-firefox-1.1.1.zip
 ```
 
-The resulting `clipjar-firefox-1.1.0.zip` contains the same files as the submitted package.
+The resulting `clipjar-firefox-1.1.1.zip` contains the same files as the submitted package.
 
 ## Build output
 
@@ -41,7 +41,7 @@ The resulting `clipjar-firefox-1.1.0.zip` contains the same files as the submitt
 ```bash
 npm run build:chrome
 npm run zip:chrome
-# Output: clipjar-chrome-1.1.0.zip
+# Output: clipjar-chrome-1.1.1.zip
 ```
 
 ## Verify

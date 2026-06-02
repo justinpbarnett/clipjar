@@ -40,13 +40,13 @@ Clipjar has none of them. Everything stays in your browser's local IndexedDB. No
 
 Download the latest zip from the [releases page](https://github.com/justinpbarnett/clipjar/releases/latest).
 
-**Chrome / Edge / Brave:** download `clipjar-chrome-1.1.0.zip`, unzip it, then:
+**Chrome / Edge / Brave:** download `clipjar-chrome-1.1.1.zip`, unzip it, then:
 
 1. Open `chrome://extensions/`
 2. Enable **Developer mode** (top right)
 3. Click **Load unpacked**, select the unzipped folder
 
-**Firefox (128+):** download `clipjar-firefox-1.1.0.zip`, unzip it, then:
+**Firefox (128+):** download `clipjar-firefox-1.1.1.zip`, unzip it, then:
 
 1. Open `about:debugging#/runtime/this-firefox`
 2. Click **Load Temporary Add-on**
