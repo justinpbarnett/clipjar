@@ -4,8 +4,33 @@ import { buildIndex, matchSnippet, EMPTY_INDEX, type SnippetIndex } from '../lib
 
 let snippetIndex: SnippetIndex = EMPTY_INDEX;
 let buffer = '';
+let intervalId: ReturnType<typeof setInterval> | undefined;
+let running = true;
+
+// Reloading or updating the extension orphans content scripts already injected
+// into open tabs: their chrome.runtime is dead. Detect that and shut down
+// quietly instead of throwing on every copy and erroring on every interval.
+function extensionAlive(): boolean {
+  try {
+    return Boolean(chrome.runtime?.id);
+  } catch {
+    return false;
+  }
+}
+
+function teardown(): void {
+  if (!running) return;
+  running = false;
+  if (intervalId !== undefined) clearInterval(intervalId);
+  document.removeEventListener('keyup', handleKeydown, true);
+}
 
 async function loadSnippets(): Promise<void> {
+  if (!running) return;
+  if (!extensionAlive()) {
+    teardown();
+    return;
+  }
   try {
     const snippets: ClipEntry[] = await chrome.runtime.sendMessage({
       type: MessageType.GET_SNIPPETS,
@@ -13,6 +38,10 @@ async function loadSnippets(): Promise<void> {
     }) || [];
     snippetIndex = buildIndex(snippets);
   } catch (err) {
+    if (!extensionAlive()) {
+      teardown();
+      return;
+    }
     console.error('[clipjar] failed to load snippets:', err);
     snippetIndex = EMPTY_INDEX;
   }
@@ -81,12 +110,12 @@ function handleKeydown(e: KeyboardEvent): void {
 loadSnippets();
 
 // Reload snippets periodically (every 30s) in case user adds new ones
-const snippetIntervalId = setInterval(loadSnippets, 30_000);
-window.addEventListener('pagehide', () => clearInterval(snippetIntervalId));
+intervalId = setInterval(loadSnippets, 30_000);
+window.addEventListener('pagehide', teardown);
 
 // Reload immediately when a new snippet is saved
 chrome.runtime.onMessage.addListener((message, sender) => {
-  if (sender.id !== chrome.runtime.id) return false;
+  if (!running || sender.id !== chrome.runtime.id) return false;
   if (message.type === MessageType.SNIPPETS_UPDATED) loadSnippets();
 });
 

@@ -1,6 +1,17 @@
 import { MessageType } from '../lib/types';
 import type { ClipCapturedPayload } from '../lib/types';
 
+// Reloading or updating the extension orphans this content script in tabs that
+// were already open: chrome.runtime is then dead and sendMessage throws. Guard
+// against it so copying in a stale tab fails silently instead of erroring.
+function extensionAlive(): boolean {
+  try {
+    return Boolean(chrome.runtime?.id);
+  } catch {
+    return false;
+  }
+}
+
 function isPasswordField(): boolean {
   const active = document.activeElement;
   if (!active) return false;
@@ -60,6 +71,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 document.addEventListener('copy', () => {
+  if (!extensionAlive()) return;
   if (isPasswordField()) return;
 
   const text = window.getSelection()?.toString();
@@ -72,8 +84,12 @@ document.addEventListener('copy', () => {
     sourceTitle: document.title,
   };
 
-  chrome.runtime.sendMessage({
-    type: MessageType.CLIP_CAPTURED,
-    payload,
-  });
+  try {
+    chrome.runtime.sendMessage({
+      type: MessageType.CLIP_CAPTURED,
+      payload,
+    });
+  } catch {
+    // Extension was reloaded; this orphaned content script can't reach it.
+  }
 });
