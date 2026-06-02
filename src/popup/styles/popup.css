@@ -381,12 +381,15 @@ body {
 }
 
 /* ── Help Overlay ── */
+/* Fixed (not absolute) so it fills the whole popup window regardless of how
+   tall the clip list left the app. The popup itself is grown to full height
+   in HelpOverlay's show() by setting document.body.style.height. */
 .jar-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: 50;
   background: var(--j-surface);
-  overflow-y: auto;
+  overflow: hidden;
   display: none;
   flex-direction: column;
 }
@@ -426,6 +429,8 @@ body {
 .jar-overlay-close:hover { color: var(--j-cream); }
 
 .jar-overlay-body {
+  flex: 1;
+  min-height: 0;
   padding: 14px 12px;
   display: flex;
   flex-direction: column;

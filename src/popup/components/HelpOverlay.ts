@@ -80,12 +80,22 @@ export function renderHelpOverlay(container: HTMLElement): () => void {
   overlay.appendChild(body);
   container.appendChild(overlay);
 
+  // The popup auto-sizes to its content, so the clip list stays compact. The
+  // help guide needs more room, so pin the body to the full popup height while
+  // it's open and release it on close. Setting document.body.style.height
+  // directly is what reliably makes Chrome regrow the popup; toggling a class
+  // on a nested element leaves the popup stuck until a reflow. The side panel
+  // is a fixed docked surface that already fills its height, so it opts out.
+  const resizesPopup = location.pathname.includes('/popup/');
+
   function show(): void {
     overlay.classList.add('visible');
+    if (resizesPopup) document.body.style.height = 'var(--j-popup-height)';
   }
 
   function hide(): void {
     overlay.classList.remove('visible');
+    if (resizesPopup) document.body.style.height = '';
   }
 
   return show;
