@@ -31,6 +31,7 @@ export interface UserSettings {
   enableSnippetExpansion: boolean;
   enableSourceTracking: boolean;
   skipPasswordFields: boolean;
+  captureFromClipboard: boolean;
   showNotifications: boolean;
   defaultTab: 'all' | 'favorites' | 'snippets';
 }

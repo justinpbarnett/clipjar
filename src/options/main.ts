@@ -32,6 +32,8 @@ const STYLE = `
   .opts-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--j-border)}
   .opts-row:last-child{border-bottom:none}
   .opts-row-label{font-size:calc(13px * var(--j-text-scale));color:var(--j-cream)}
+  .opts-row-text{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;padding-right:14px}
+  .opts-row-desc{font-size:calc(11px * var(--j-text-scale));color:var(--j-muted);line-height:1.45}
   .opts-input{
     background:var(--j-raised);border:1px solid var(--j-border);border-radius:3px;
     padding:5px 10px;color:var(--j-cream);font-size:calc(12px * var(--j-text-scale));font-family:ui-monospace,monospace;
@@ -74,6 +76,13 @@ async function init() {
     payload: undefined,
   });
   const settings = { ...DEFAULT_SETTINGS, ...(savedSettings ?? {}) };
+
+  const hasClipboardRead = await containsClipboardRead();
+  if (settings.captureFromClipboard && !hasClipboardRead) {
+    // Permission was revoked outside the extension; reconcile the stored flag.
+    await saveSetting('captureFromClipboard', false);
+    settings.captureFromClipboard = false;
+  }
 
   // Inject styles
   const style = document.createElement('style');
@@ -140,6 +149,7 @@ async function init() {
   addToggleSetting(behaviorSection, 'Skip password fields', 'skipPasswordFields', settings.skipPasswordFields);
   addToggleSetting(behaviorSection, 'Enable snippet expansion', 'enableSnippetExpansion', settings.enableSnippetExpansion);
   addToggleSetting(behaviorSection, 'Track source URLs', 'enableSourceTracking', settings.enableSourceTracking);
+  addClipboardCaptureToggle(behaviorSection, settings.captureFromClipboard);
   wrap.appendChild(behaviorSection);
 
   // Data section
@@ -225,6 +235,83 @@ function addToggleSetting(container: HTMLElement, label: string, key: string, va
   toggle.appendChild(thumb);
   row.appendChild(toggle);
   container.appendChild(row);
+}
+
+function addClipboardCaptureToggle(container: HTMLElement, enabled: boolean) {
+  const row = document.createElement('div');
+  row.className = 'opts-row';
+
+  const text = document.createElement('div');
+  text.className = 'opts-row-text';
+  const title = document.createElement('span');
+  title.className = 'opts-row-label';
+  title.textContent = 'Use system clipboard';
+  const desc = document.createElement('span');
+  desc.className = 'opts-row-desc';
+  desc.textContent = 'Also captures copies from the address bar and other apps';
+  text.appendChild(title);
+  text.appendChild(desc);
+  row.appendChild(text);
+
+  const toggle = document.createElement('label');
+  toggle.className = 'opts-toggle';
+  const input = document.createElement('input');
+  input.type = 'checkbox';
+  input.checked = enabled;
+  input.addEventListener('change', async () => {
+    if (input.checked) {
+      // Reading the clipboard is an opt-in permission, requested on enable so
+      // the default install never gains clipboard-read access.
+      const granted = await requestClipboardRead();
+      if (!granted) {
+        input.checked = false;
+        return;
+      }
+      await saveSetting('captureFromClipboard', true);
+    } else {
+      await saveSetting('captureFromClipboard', false);
+      await removeClipboardRead();
+    }
+  });
+  const track = document.createElement('span');
+  track.className = 'opts-toggle-track';
+  const thumb = document.createElement('span');
+  thumb.className = 'opts-toggle-thumb';
+  toggle.appendChild(input);
+  toggle.appendChild(track);
+  toggle.appendChild(thumb);
+  row.appendChild(toggle);
+  container.appendChild(row);
+}
+
+function containsClipboardRead(): Promise<boolean> {
+  try {
+    return Promise.resolve(chrome.permissions.contains({ permissions: ['clipboardRead'] }))
+      .then(Boolean)
+      .catch(() => false);
+  } catch {
+    return Promise.resolve(false);
+  }
+}
+
+function requestClipboardRead(): Promise<boolean> {
+  try {
+    return Promise.resolve(chrome.permissions.request({ permissions: ['clipboardRead'] }))
+      .then(Boolean)
+      .catch(() => false);
+  } catch {
+    return Promise.resolve(false);
+  }
+}
+
+function removeClipboardRead(): Promise<void> {
+  try {
+    return Promise.resolve(chrome.permissions.remove({ permissions: ['clipboardRead'] }))
+      .then(() => undefined)
+      .catch(() => undefined);
+  } catch {
+    return Promise.resolve();
+  }
 }
 
 function createRow(label: string): HTMLElement {

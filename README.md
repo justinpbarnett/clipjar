@@ -33,7 +33,8 @@ Clipjar has none of them. Everything stays in your browser's local IndexedDB. No
 - Full JSON export and import
 - Adjustable text size, with a larger popup when you need it
 - Side panel for a persistent view while you browse
-- No `clipboardRead` permission needed; clips are captured via the native copy event
+- Clips are captured via the native copy event, with no clipboard reading by default
+- Optional clipboard capture (off until you turn it on) catches copies from the address bar and other apps, and asks for `clipboardRead` only when you enable it
 
 ## Install
 
@@ -152,7 +153,7 @@ npm run zip            # Package dist-chrome/ for Chrome Web Store
 
 All data is stored in IndexedDB locally. Nothing leaves your browser: no network requests, no analytics, no telemetry.
 
-Text is captured via `window.getSelection()` inside the native copy event, so `clipboardRead` isn't needed.
+By default, text is captured via `window.getSelection()` inside the native copy event, so no clipboard reading is involved. The optional "Use system clipboard" setting is off until you enable it; turning it on requests the `clipboardRead` permission so Clipjar can also catch copies made outside web pages (the address bar, other apps). Leave it off and Clipjar never reads your clipboard.
 
 Open source. Read every line.
 

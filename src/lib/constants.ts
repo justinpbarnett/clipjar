@@ -7,6 +7,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   enableSnippetExpansion: true,
   enableSourceTracking: true,
   skipPasswordFields: true,
+  captureFromClipboard: false,
   showNotifications: false,
   defaultTab: 'all',
 };

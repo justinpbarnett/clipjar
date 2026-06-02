@@ -47,7 +47,7 @@ Open Clipjar in a persistent side panel while you browse.
 
 PRIVACY
 
-No accounts. No servers. No analytics. Your clipboard data stays on your machine. Clipjar captures copies via the native copy event, so it does not need the clipboardRead permission.
+No accounts. No servers. No analytics. Your clipboard data stays on your machine. Clipjar captures copies via the native copy event and does not read your clipboard by default. An optional setting can capture copies made outside web pages (like the address bar); it is off until you turn it on, and only then does Clipjar request clipboard-read access.
 
 OPEN SOURCE
 
@@ -100,7 +100,7 @@ Increase text size in settings. The popup grows with it, making clips easier to 
 
 PRIVACY
 
-No accounts. No servers. No analytics. Your clipboard data stays on your machine. Clipjar captures copies via the native copy event, so it does not need the clipboardRead permission. Full privacy policy at the link below.
+No accounts. No servers. No analytics. Your clipboard data stays on your machine. Clipjar captures copies via the native copy event and does not read your clipboard by default. An optional setting can capture copies made outside web pages (like the address bar); it is off until you turn it on, and only then does Clipjar request clipboard-read access. Full privacy policy at the link below.
 
 OPEN SOURCE
 

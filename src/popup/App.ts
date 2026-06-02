@@ -1,6 +1,7 @@
 import { createStore, type Store } from '../lib/store';
 import { sendMessage } from '../lib/messages';
 import { writeToClipboard } from '../lib/clipboard-write';
+import { readClipboardText } from '../lib/clipboard-read';
 import { searchClips, invalidateIndex } from '../lib/search';
 import { MessageType, type ClipEntry, type UserSettings } from '../lib/types';
 import { DEFAULT_SETTINGS, PAGE_SIZE, SETTINGS_SYNC_KEY } from '../lib/constants';
@@ -16,6 +17,8 @@ import { showToast } from './components/Toast';
 export function initApp(root: HTMLElement): void {
   const store = createStore<PopupState>(initialState);
   let allClips: ClipEntry[] = [];
+  let captureFromClipboard = DEFAULT_SETTINGS.captureFromClipboard;
+  let lastClipboardText: string | null = null;
 
   root.className = 'relative flex flex-col';
   root.style.cssText = 'width:var(--j-popup-width);max-height:var(--j-popup-height);overflow:hidden;background:var(--j-surface)';
@@ -46,10 +49,21 @@ export function initApp(root: HTMLElement): void {
   });
 
   applyTextSize(DEFAULT_SETTINGS.textSize);
-  void loadPreferences();
+  const prefsReady = loadPreferences();
   subscribeToSettingChanges();
-  fetchClips();
+  const clipsReady = fetchClips();
   loadCount();
+
+  // Catch copies made outside web pages (address bar, other apps) by reading the
+  // clipboard once this surface is up, then again whenever it regains focus. The
+  // first read waits on settings and the initial list so we honor the toggle and
+  // can dedupe against the most recent clip.
+  void (async () => {
+    await prefsReady;
+    await clipsReady;
+    await captureClipboard();
+  })();
+  window.addEventListener('focus', () => void captureClipboard());
 
   document.addEventListener('keydown', (e) => handleKeydown(e, store));
 
@@ -60,6 +74,7 @@ export function initApp(root: HTMLElement): void {
         payload: undefined,
       });
       const settings = { ...DEFAULT_SETTINGS, ...(savedSettings ?? {}) };
+      captureFromClipboard = settings.captureFromClipboard;
       applyTextSize(settings.textSize);
     } catch {
       applyTextSize(DEFAULT_SETTINGS.textSize);
@@ -75,8 +90,27 @@ export function initApp(root: HTMLElement): void {
         ...DEFAULT_SETTINGS,
         ...((settingsChange.newValue as Partial<UserSettings> | undefined) ?? {}),
       };
+      captureFromClipboard = settings.captureFromClipboard;
       applyTextSize(settings.textSize);
     });
+  }
+
+  async function captureClipboard(): Promise<void> {
+    if (!captureFromClipboard) return;
+
+    const text = await readClipboardText();
+    if (!text || text === lastClipboardText) return;
+    lastClipboardText = text;
+
+    // Already the most recent clip (e.g. just copied from within Clipjar), so
+    // skip it. Otherwise opening the UI would keep re-bumping the same entry.
+    if (text === allClips[0]?.content) return;
+
+    await sendMessage({
+      type: MessageType.CLIP_CAPTURED,
+      payload: { content: text, sourceUrl: '', sourceTitle: '' },
+    });
+    await fetchClips();
   }
 
   async function fetchClips(): Promise<void> {

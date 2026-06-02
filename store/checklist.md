@@ -33,6 +33,8 @@
 ### Expected review time
 First submission with <all_urls> host permission triggers enhanced review. Budget 1-3 weeks. Reviewers may ask why the extension needs all URLs. Answer: content script listens for copy events on every page. Be direct in your response.
 
+`clipboardRead` ships as an optional permission, requested at runtime only when the user enables "Use system clipboard." If asked, explain it is off by default and used to capture copies made outside web pages (such as the address bar).
+
 ---
 
 ## Firefox Add-ons (AMO)

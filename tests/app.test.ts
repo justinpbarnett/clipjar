@@ -162,3 +162,72 @@ describe('initApp — pin behavior', () => {
     );
   });
 });
+
+describe('initApp — clipboard capture', () => {
+  let root: HTMLDivElement;
+
+  function setClipboard(text: string): ReturnType<typeof vi.fn> {
+    const readText = vi.fn().mockResolvedValue(text);
+    Object.defineProperty(navigator, 'clipboard', { value: { readText }, configurable: true });
+    return readText;
+  }
+
+  function getSendMessage(): ReturnType<typeof vi.fn> {
+    return (globalThis as unknown as { chrome: { runtime: { sendMessage: ReturnType<typeof vi.fn> } } })
+      .chrome.runtime.sendMessage;
+  }
+
+  function capturedContents(): (string | undefined)[] {
+    return getSendMessage().mock.calls
+      .map((c: unknown[]) => c[0] as { type: MessageType; payload?: { content?: string } })
+      .filter((m) => m.type === MessageType.CLIP_CAPTURED)
+      .map((m) => m.payload?.content);
+  }
+
+  const flush = () => new Promise((r) => setTimeout(r, 0));
+
+  beforeEach(() => {
+    setupChrome();
+    root = document.createElement('div');
+    document.body.appendChild(root);
+  });
+
+  afterEach(() => {
+    document.documentElement.removeAttribute('data-clipjar-text-size');
+    document.body.removeChild(root);
+    delete (navigator as unknown as { clipboard?: unknown }).clipboard;
+  });
+
+  it('captures new clipboard text not yet in history when the surface opens', async () => {
+    setupChrome({ settings: { captureFromClipboard: true } });
+    setClipboard('https://example.com/from-address-bar');
+    initApp(root);
+
+    await vi.waitFor(() =>
+      expect(capturedContents()).toContain('https://example.com/from-address-bar'),
+    );
+  });
+
+  it('does not re-capture when the clipboard matches the most recent clip', async () => {
+    setupChrome({ settings: { captureFromClipboard: true } });
+    setClipboard('Content of c1'); // c1 is the most recent clip in testClips
+    initApp(root);
+
+    await vi.waitFor(() => root.querySelectorAll('[data-id]').length === 2);
+    await flush();
+
+    expect(capturedContents()).not.toContain('Content of c1');
+  });
+
+  it('does not read the clipboard when the setting is off', async () => {
+    setupChrome({ settings: { captureFromClipboard: false } });
+    const readText = setClipboard('https://example.com/should-be-ignored');
+    initApp(root);
+
+    await vi.waitFor(() => root.querySelectorAll('[data-id]').length === 2);
+    await flush();
+
+    expect(readText).not.toHaveBeenCalled();
+    expect(capturedContents()).toHaveLength(0);
+  });
+});

@@ -9,6 +9,9 @@
     "contextMenus",
     "clipboardWrite"
   ],
+  "optional_permissions": [
+    "clipboardRead"
+  ],
   "host_permissions": [
     "<all_urls>"
   ],
